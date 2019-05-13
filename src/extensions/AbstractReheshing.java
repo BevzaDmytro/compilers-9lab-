@@ -53,10 +53,10 @@ public abstract class AbstractReheshing {
 
     protected void basicFillTable(){
         int count = this.tableSize * this.fillPercentage / 100;
-        int j = 0;
+
         for(int i = 0; i < count; i++ ){
             boolean isFree = true;
-
+            int j = i;
             String identifier = this.generateRandomString();
             while (isFree){
                 int hash = this.calculateHash(identifier, j);
@@ -76,7 +76,7 @@ public abstract class AbstractReheshing {
                 }
                 this.table.set(hash, identifier);
                 isFree = false;
-                j = 0;
+//                j = 0;
             }
 
         }
@@ -88,7 +88,8 @@ public abstract class AbstractReheshing {
         int code = -1;
 
         code = string.hashCode() / tableSize;
-        return code;
+//        return code;
+        return string.hashCode();
     }
 
     protected String generateRandomString(){
