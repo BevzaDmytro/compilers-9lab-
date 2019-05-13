@@ -18,6 +18,71 @@ public abstract class AbstractReheshing {
     }
 
     protected abstract void run();
+    protected abstract int calculateHash(String identifier, int j);
+
+    protected void countProbes() {
+        int count =  100;
+        int j = 0;
+        for(int i = 0; i < count; i++ ){
+            boolean isFree = true;
+
+            String identifier = this.generateRandomString();
+            while (isFree){
+                int hash = this.calculateHash(identifier, j);
+                if(this.table.get(hash) != null){
+                    if(!this.table.get(hash).equals(identifier)) {
+                        j++;
+                        this.probesCount++;
+                        if(j > this.tableSize-1) try {
+                            throw new Exception("Conflict: can't calculate hash for "+ identifier);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        continue;
+                    }
+                    else break;
+                }
+                this.table.set(hash, identifier);
+                isFree = false;
+                j = 0;
+            }
+
+        }
+
+    }
+
+    protected void basicFillTable(){
+        int count = this.tableSize * this.fillPercentage / 100;
+        int j = 0;
+        for(int i = 0; i < count; i++ ){
+            boolean isFree = true;
+
+            String identifier = this.generateRandomString();
+            while (isFree){
+                int hash = this.calculateHash(identifier, j);
+                if(this.table.get(hash) != null){
+                    if(!this.table.get(hash).equals(identifier)) {
+                        j++;
+                        if(j > this.tableSize-1) try {
+                            throw new Exception("Conflict: can't calculate hash for "+ identifier);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        continue;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                this.table.set(hash, identifier);
+                isFree = false;
+                j = 0;
+            }
+
+        }
+    }
+
+
 
     protected int h0(String string){
         int code = -1;
